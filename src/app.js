@@ -1,4 +1,3 @@
-
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
@@ -9,7 +8,7 @@ const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const userViewRouter = require('./routes/view/user')
-
+const userAPIRouter = require('./routes/api/user')
 // error handler
 onerror(app)
 
@@ -33,8 +32,9 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-// routes
+// routes 注册
 app.use(index.routes(), index.allowedMethods())
+app.use(userAPIRouter.routes(),userAPIRouter.allowedMethods())
 app.use(userViewRouter.routes(),userViewRouter.allowedMethods())
 
 // error-handling
