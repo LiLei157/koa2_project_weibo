@@ -5,6 +5,7 @@
 const {getUserInfo,createUser} = require('../service/user')
 const {SuccessModel,ErrorModel} = require('../model/ResModel')
 const {registerUserNameExistInfo,registerFailInfo} = require('../model/ErrorInfo')
+const doCrypto = require('../utils/crpy')
 /**
  * 查询用户名是否已存在的业务逻辑
  * @param {*} userName 
@@ -42,7 +43,7 @@ async function register({userName,password,gender}){
     try{
         await createUser({
             userName,
-            password,
+            password:doCrypto(password),
             gender
         })
         return new SuccessModel()
@@ -51,8 +52,18 @@ async function register({userName,password,gender}){
         return new ErrorModel(registerFailInfo)
     }
 }
+/**
+ * 
+ * @param {String} userName 用户名
+ * @param {String} password 密码 
+ */
+async function login({userName,password}){
+    // 1、逻辑处理，这里暂没有逻辑
+    // 2、调用service里的方法去验证登录
+}
 
 module.exports = {
     isExist,
-    register
+    register,
+    login
 }

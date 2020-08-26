@@ -52,6 +52,11 @@ router.post('/register',async (ctx,next)=>{
     ctx.body = await register({userName,password,gender})
 })
 
+router.post('/login',async (ctx,next)=>{
+    const {userName,password} = ctx.request.body
+    // 调用controller中的方法
+    
+})
 
 // 导出当前的User api router
 module.exports = router
