@@ -41,6 +41,54 @@
     "name": "PostApiUserIsexist"
   },
   {
+    "type": "POST",
+    "url": "/api/user/login",
+    "title": "用户登录",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "userName",
+            "description": "<p>用户名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Response-Example:",
+          "content": "{\n     errno:0,\n     data:{}\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Response-Example:",
+          "content": "{\n     errno:10004,\n     message:\"登录失败，用户名或密码错误\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/user.js",
+    "groupTitle": "User",
+    "name": "PostApiUserLogin"
+  },
+  {
     "type": "post",
     "url": "/api/user/register",
     "title": "用户注册",

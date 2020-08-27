@@ -52,7 +52,22 @@ router.post('/register',genValidator(userValidator),async (ctx,next)=>{
     // 调用controller中的方法
     ctx.body = await register({userName,password,gender})
 })
-
+/**
+ * @api {POST} /api/user/login 用户登录
+ * @apiGroup User
+ * @apiParam {String} userName 用户名
+ * @apiParam {String} password 密码
+ * @apiSuccessExample {json} Response-Example:
+ * {
+ *      errno:0,
+ *      data:{}
+ * }
+ * @apiErrorExample {json} Response-Example:
+ * {
+ *      errno:10004,
+ *      message:"登录失败，用户名或密码错误"
+ * }
+ */
 router.post('/login',async (ctx,next)=>{
     const {userName,password} = ctx.request.body
     // 调用controller中的方法

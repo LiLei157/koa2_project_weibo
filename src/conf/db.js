@@ -15,15 +15,22 @@ let MYSQL_CONF = {
     password:'root123',
     database:'koa2_weibo_db'
 }
-
+let REDIS_CONF = {
+    port:6379,
+    host:"127.0.0.1"
+}
 // 生产环境
 if(isProd){
     MYSQL_CONF = {
         
     }
+    REDIS_CONF={
+
+    }
 }
 
 module.exports = {
-    MYSQL_CONF
+    MYSQL_CONF,
+    REDIS_CONF
 }
 
