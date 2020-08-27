@@ -3,7 +3,8 @@
  */
 const router = require('koa-router')()
 const {isExist,register} = require('../../controller/user')
-
+const userValidator = require('../../vlidator/user')    // 导入用户信息验证函数作为参数传递给数据验证中间件
+const genValidator = require('../../middlewares/validator') //导入定义的数据验证中间件
 router.prefix('/api/user')  // 设置基础路由
 
 /**
@@ -46,7 +47,7 @@ router.post('/isExist',async (ctx,next)=>{
  * }     
  * 
  */
-router.post('/register',async (ctx,next)=>{
+router.post('/register',genValidator(userValidator),async (ctx,next)=>{
     const {userName,password,gender} = ctx.request.body
     // 调用controller中的方法
     ctx.body = await register({userName,password,gender})
