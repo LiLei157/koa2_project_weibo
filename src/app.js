@@ -4,11 +4,13 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
+const session = require('koa-generic-session')
 const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const userViewRouter = require('./routes/view/user')
 const userAPIRouter = require('./routes/api/user')
+const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
 // error handler
 onerror(app)
 
@@ -22,6 +24,18 @@ app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
+}))
+
+// session配置
+app.keys = [SESSION_SECRET_KEY]
+app.use(session({
+  key:'weibo.sid',
+  prefix:'weibo.sess:',
+  cookie:{
+    path:'/',
+    httpOnly:true,
+    maxAge: 24 * 60 * 60 * 1000
+  }
 }))
 
 // logger
