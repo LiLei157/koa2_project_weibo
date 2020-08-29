@@ -2,9 +2,9 @@
  * @description:处理查询用户是否存在，只是业务逻辑
  *
  */
-const {getUserInfo,createUser} = require('../service/user')
+const {getUserInfo,createUser,delUser} = require('../service/user')
 const {SuccessModel,ErrorModel} = require('../model/ResModel')
-const {registerUserNameExistInfo,registerFailInfo,loginFailInfo} = require('../model/ErrorInfo')
+const {registerUserNameExistInfo,registerFailInfo,loginFailInfo,deleteUserFailInfo} = require('../model/ErrorInfo')
 const doCrypto = require('../utils/crpy')
 /**
  * 查询用户名是否已存在的业务逻辑
@@ -69,9 +69,25 @@ async function login(ctx,userName,password){
     }
     return new SuccessModel()
 }
+/**
+ * 根据用户名删除用户信息
+ * @param {String} userName 
+ * @param 
+ */
+async function deleteUser(userName){
+    // 没有逻辑，直接调用service中的方法删除用户
+    const result = await delUser(userName)
+    if(result){
+        // 大于0，true，删除成功
+        return new SuccessModel()
+    }else{
+        return new ErrorModel(deleteUserFailInfo)
+    }
+}
 
 module.exports = {
     isExist,
     register,
-    login
+    login,
+    deleteUser
 }

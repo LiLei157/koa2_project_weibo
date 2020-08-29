@@ -49,8 +49,22 @@
     const data = result.dataValues
     return data
  }
+/**
+ * 根据用户名删除用户信息
+ * @param {*} userName 
+ */
+async function delUser(userName){
+    const result = await User.destroy({
+        where:{
+            userName
+        }
+    })
+    // 删除成功则result大于0，返回true
+    return result > 0
+}
 
  module.exports = {
      getUserInfo,
-     createUser
+     createUser,
+     delUser
  }

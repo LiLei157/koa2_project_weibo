@@ -2,9 +2,12 @@
  * @description: user api 路由
  */
 const router = require('koa-router')()
-const {isExist,register, login} = require('../../controller/user')
+const {isExist,register, login,deleteUser} = require('../../controller/user')
 const userValidator = require('../../vlidator/user')    // 导入用户信息验证函数作为参数传递给数据验证中间件
 const genValidator = require('../../middlewares/validator') //导入定义的数据验证中间件
+const {isTest} = require('../../utils/env')
+const {loginCheck} = require('../../middlewares/loginCheck')
+
 router.prefix('/api/user')  // 设置基础路由
 
 /**
@@ -72,6 +75,20 @@ router.post('/login',async (ctx,next)=>{
     const {userName,password} = ctx.request.body
     // 调用controller中的方法
     ctx.body = await login(ctx,userName,password)
+})
+
+/**
+ * 1、删除用户数据，只在单元测试时可用，用于删除测试数据
+ * 2、删除信息必须先验证是否登录，登录成功才让删除
+ * 3、只能删除当前登录的用户信息
+ */
+router.post('/delete',loginCheck,async (ctx,next) =>{
+    // 用户登录成功后会向session中写入用户信息，所以直接从session中获取
+    const {userName} = ctx.session.userInfo
+    // 只有test环境下 调用controller逻辑
+    if(isTest){
+        ctx.body = await deleteUser(userName)
+    }
 })
 
 // 导出当前的User api router
