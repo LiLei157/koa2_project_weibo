@@ -8,7 +8,9 @@
  */
 const koa = require('koa')
 const router = require('koa-router')()
+// const {ip} = require('../../utils/getIp')
 
+const {loginRedirect} = require('../../middlewares/loginCheck') // 页面验证
 /**
  * 获取用户信息
  * @param {*} ctx 
@@ -35,5 +37,16 @@ router.get('/login',async (ctx,next)=>{
 router.get('/register',async (ctx,next)=>{
     await ctx.render('register',getUserInfo(ctx))
 })
+
+// 用户设置
+router.get('/setting',loginRedirect,async(ctx,next)=>{
+    // 登录成功后会把用户信息储存在session中，通过ctx.session.userInfo取出
+    await ctx.render('setting',ctx.session.userInfo)
+})
+// router.get('/getIp',async(ctx,next)=>{
+//     // 登录成功后会把用户信息储存在session中，通过ctx.session.userInfo取出
+//     ctx.body = `本机ip：${ip}`
+// })
+
 
 module.exports = router

@@ -62,9 +62,46 @@ async function delUser(userName){
     // 删除成功则result大于0，返回true
     return result > 0
 }
+/**
+ * 更新用户信息
+ * @param {*} param0 
+ * @param {*} param1 
+ */
+async function updateUser(
+        {newNickName,newCity,newPicture,newPassword},
+        {userName,password}
+    ){
+    const updateData = {}
+    if(newNickName){
+        updateData.nickName = newNickName
+    }
+    if(newPassword){
+        updateData.password = newPassword
+    }
+    if(newCity){
+        updateData.city = newCity
+    }
+    if(newPicture){
+        updateData.picture = newPicture
+    }
+    // 拼接查询条件
+    let whereData = {
+        userName
+    }
+    if(password){
+        whereData.password = password
+    }
+    // 执行修改操作
+    let result = await User.update(updateData,{
+        where:whereData
+    })
+    // 大于0代表数据更新成功
+    return result[0]>0
+}
 
  module.exports = {
      getUserInfo,
      createUser,
-     delUser
+     delUser,
+     updateUser
  }

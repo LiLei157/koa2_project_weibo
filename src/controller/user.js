@@ -2,9 +2,9 @@
  * @description:处理查询用户是否存在，只是业务逻辑
  *
  */
-const {getUserInfo,createUser,delUser} = require('../service/user')
+const {getUserInfo,createUser,delUser,updateUser} = require('../service/user')
 const {SuccessModel,ErrorModel} = require('../model/ResModel')
-const {registerUserNameExistInfo,registerFailInfo,loginFailInfo,deleteUserFailInfo} = require('../model/ErrorInfo')
+const {registerUserNameExistInfo,registerFailInfo,loginFailInfo,deleteUserFailInfo,changeInfoFailInfo} = require('../model/ErrorInfo')
 const doCrypto = require('../utils/crpy')
 /**
  * 查询用户名是否已存在的业务逻辑
@@ -84,10 +84,42 @@ async function deleteUser(userName){
         return new ErrorModel(deleteUserFailInfo)
     }
 }
+/**
+ * 更新用户信息
+ * @param {*} ctx 
+ * @param {*} param1 
+ */
+async function changeInfo(ctx,{nickName,city,picture}){
+    let {userName} = ctx.session.userInfo
+    // 判断当前用户是否有输入nickName
+    if(!nickName){
+        nickName = userNmae
+    }
+    // 调用service层方法操作数据库
+    const res = await updateUser({
+        newNickName:nickName,
+        newCity:city,
+        newPicture:picture
+    },
+    {userName}
+    )
+    if(res){
+        // 往Session中追加nickName,city
+        Object.assign(ctx.session.userInfo,{
+            nickName,
+            city,
+            picture
+        })
+        // res为true，代表更新成功
+        return new SuccessModel()
+    }
+    return new ErrorModel(changeInfoFailInfo)
+}
 
 module.exports = {
     isExist,
     register,
     login,
-    deleteUser
+    deleteUser,
+    changeInfo
 }

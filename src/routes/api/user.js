@@ -2,7 +2,7 @@
  * @description: user api 路由
  */
 const router = require('koa-router')()
-const {isExist,register, login,deleteUser} = require('../../controller/user')
+const {isExist,register, login,deleteUser,changeInfo} = require('../../controller/user')
 const userValidator = require('../../vlidator/user')    // 导入用户信息验证函数作为参数传递给数据验证中间件
 const genValidator = require('../../middlewares/validator') //导入定义的数据验证中间件
 const {isTest} = require('../../utils/env')
@@ -89,6 +89,32 @@ router.post('/delete',loginCheck,async (ctx,next) =>{
     if(isTest){
         ctx.body = await deleteUser(userName)
     }
+})
+/**
+ * @api {POST} /api/user/changeInfo 修改用户信息：昵称，城市和头像
+ * @apiParam {String} nickName 昵称
+ * @apiParam {String} city 城市
+ * @apiParam {String} picture 图片url
+ * @apiSuccessExample {json} Response-Example:
+ * {
+ *     errno:0,
+ *     data:null
+ * }
+ * @apiErrorExample {json} Response-Example:
+ * {
+ *     errno:10008,
+ *     msg:"修改基本信息失败"
+ * }
+ */
+router.patch('/changeInfo',loginCheck,genValidator(userValidator),async(ctx,next)=>{
+    const {nickName,city,picture} = ctx.request.body
+    // 调用controller逻辑层方法
+    ctx.body = await changeInfo(ctx,{nickName,city,picture})
+    console.log({nickName,city,picture})
+})
+
+router.patch('/changePassword',loginCheck,genValidator(userValidator),async(ctx,next)=>{
+    ctx.body = 'success'
 })
 
 // 导出当前的User api router

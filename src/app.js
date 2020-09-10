@@ -6,10 +6,14 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const session = require('koa-generic-session')
 const logger = require('koa-logger')
+const redisStore = require('koa-redis')
 
+const REDIS_CONF = require('./conf/db')
 const index = require('./routes/index')
 const userViewRouter = require('./routes/view/user')
 const userAPIRouter = require('./routes/api/user')
+const utilsAPIRouter = require('./routes/api/utils')
+
 const {SESSION_SECRET_KEY} = require('./conf/secretKeys')
 // error handler
 onerror(app)
@@ -35,7 +39,10 @@ app.use(session({
     path:'/',
     httpOnly:true,
     maxAge: 24 * 60 * 60 * 1000
-  }
+  },
+  store:redisStore({
+    all:`${REDIS_CONF.host}:${REDIS_CONF.port}`
+  })
 }))
 
 // logger
@@ -50,7 +57,7 @@ app.use(async (ctx, next) => {
 app.use(index.routes(), index.allowedMethods())
 app.use(userAPIRouter.routes(),userAPIRouter.allowedMethods())
 app.use(userViewRouter.routes(),userViewRouter.allowedMethods())
-
+app.use(utilsAPIRouter.routes(),utilsAPIRouter.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
